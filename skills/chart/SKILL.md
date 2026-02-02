@@ -1,6 +1,6 @@
 ---
 name: chart
-description: Generate beautiful Economist-style charts using QuickChart.io. Supports bar, line, pie, doughnut, radar, and scatter charts. No dependencies required.
+description: Generate minimal, clean charts using QuickChart.io with shadcn-style grayscale design. Supports bar, line, area, pie, and more. No dependencies required.
 allowed-tools:
   - Bash(curl *)
   - Read
@@ -9,15 +9,15 @@ allowed-tools:
 
 # Chart Generation Skill
 
-Generate publication-quality charts in the style of The Economist's Graphic Detail using QuickChart.io (no local dependencies needed).
+Generate clean, minimal charts with shadcn-inspired grayscale styling using QuickChart.io (no dependencies needed).
 
 ## Quick Usage
 
 ```
 /chart bar chart: Category A 45, Category B 32, Category C 78
 /chart line chart: Jan 100, Feb 150, Mar 200, Apr 180
+/chart area chart: Q1 100, Q2 150, Q3 200, Q4 180
 /chart pie chart: Sales 45%, Marketing 30%, Engineering 25%
-/chart horizontal bar: Product A 120, Product B 85, Product C 200
 ```
 
 ## Data Input Formats
@@ -39,49 +39,50 @@ Label1 Value1, Label2 Value2, Label3 Value3
 | Bar (vertical) | `bar`, `bar chart` | Vertical bars |
 | Bar (horizontal) | `horizontal bar`, `hbar` | Horizontal bars |
 | Line | `line`, `line chart` | Time series, trends |
+| Area | `area`, `area chart` | Filled line chart |
 | Pie | `pie`, `pie chart` | Proportions |
-| Doughnut | `doughnut`, `donut` | Proportions (ring style) |
-| Radar | `radar` | Multi-dimensional comparison |
-| Scatter | `scatter` | Correlations |
+| Doughnut | `doughnut`, `donut` | Ring-style proportions |
 
 ## Options
 
 - **title**: `title "My Chart Title"`
-- **output**: `save to /path/to/chart.png` (default: `~/Downloads/chart_YYYYMMDD_HHMMSS.png` with timestamp)
+- **output**: `save to /path/to/chart.png` (default: `~/Downloads/chart_YYYYMMDD_HHMMSS.png`)
 - **size**: `size 800x600` (width x height in pixels, default: 600x400)
 
-## Color Palette (Economist-inspired)
+## Color Palette (Grayscale - shadcn/Zinc)
 
 | Color | Hex | Usage |
 |-------|-----|-------|
-| Primary Red | `#E3120B` | Main data series |
-| Blue | `#0D6ABF` | Secondary series |
-| Teal | `#006D64` | Third series |
-| Orange | `#F18F01` | Fourth series |
-| Gray | `#4A4A4A` | Fifth series |
-| Dark Red | `#9E2A2B` | Sixth series |
+| zinc-900 | `#18181B` | Primary series |
+| zinc-700 | `#3F3F46` | Secondary series |
+| zinc-500 | `#71717A` | Third series |
+| zinc-400 | `#A1A1AA` | Fourth series |
+| zinc-300 | `#D4D4D8` | Fifth series |
+| zinc-200 | `#E4E4E7` | Sixth series |
+| zinc-100 | `#F4F4F5` | Grid lines |
 
-## Economist Style Elements
+## Style Elements
 
 - Clean, minimal design
-- Sans-serif fonts
-- Horizontal gridlines only
-- No chart border on top and right
-- Data labels on charts
-- Left-aligned titles
+- Grayscale color palette
+- Subtle grid lines (zinc-100)
+- Rounded corners on bars (radius: 4)
+- Smooth curves on lines (tension: 0.3)
+- No borders, light aesthetic
+- Semi-transparent fills for area charts
 
 ## Instructions
 
 When the user requests a chart:
 
 1. **Parse the request** to identify:
-   - Chart type (bar, horizontalBar, line, pie, doughnut, radar, scatter)
+   - Chart type (bar, line, area, pie, doughnut, horizontal bar)
    - Data (inline or file path)
    - Title (if provided)
    - Output path (default: `~/Downloads/chart_$(date +%Y%m%d_%H%M%S).png`)
    - Size (default: 600x400)
 
-2. **Build the Chart.js configuration** using this Economist-style template:
+2. **Build the Chart.js configuration** using this shadcn-style template:
 
 ```json
 {
@@ -89,9 +90,9 @@ When the user requests a chart:
   "data": {
     "labels": ["A", "B", "C"],
     "datasets": [{
-      "label": "Data",
       "data": [10, 20, 30],
-      "backgroundColor": ["#E3120B", "#0D6ABF", "#006D64", "#F18F01", "#4A4A4A", "#9E2A2B"]
+      "backgroundColor": "#18181B",
+      "borderRadius": 4
     }]
   },
   "options": {
@@ -103,41 +104,31 @@ When the user requests a chart:
         "display": true,
         "text": "Chart Title",
         "align": "start",
-        "font": { "size": 18, "weight": "bold", "family": "Helvetica Neue, Arial, sans-serif" },
-        "color": "#1A1A1A",
+        "font": { "size": 16, "weight": "600", "family": "Inter, system-ui, sans-serif" },
+        "color": "#18181B",
         "padding": { "bottom": 20 }
       },
       "legend": { "display": false },
-      "datalabels": {
-        "display": true,
-        "anchor": "end",
-        "align": "top",
-        "color": "#1A1A1A",
-        "font": { "weight": "bold" }
-      }
+      "datalabels": { "display": false }
     },
     "scales": {
       "y": {
         "beginAtZero": true,
-        "grid": { "color": "#D9D5C9" },
-        "ticks": { "color": "#1A1A1A", "padding": 10 }
+        "border": { "display": false },
+        "grid": { "color": "#F4F4F5" },
+        "ticks": { "color": "#71717A", "padding": 10, "font": { "size": 11 } }
       },
       "x": {
+        "border": { "display": false },
         "grid": { "display": false },
-        "ticks": { "color": "#1A1A1A", "padding": 10 }
+        "ticks": { "color": "#71717A", "padding": 10, "font": { "size": 11 } }
       }
     }
   }
 }
 ```
 
-3. **Generate the chart** using curl to QuickChart.io:
-
-```bash
-curl -o ~/Downloads/chart_$(date +%Y%m%d_%H%M%S).png "https://quickchart.io/chart?c=$(echo 'CHART_CONFIG_JSON' | jq -sRr @uri)&backgroundColor=white&width=600&height=400"
-```
-
-Use POST with `"version": "4"` for Chart.js v4 syntax:
+3. **Generate the chart** using POST to QuickChart.io:
 
 ```bash
 curl -X POST https://quickchart.io/chart \
@@ -156,13 +147,17 @@ curl -X POST https://quickchart.io/chart \
 
 ## Chart Type Configurations
 
-### Bar Chart (vertical)
+### Bar Chart
 ```json
 {
   "type": "bar",
   "data": {
     "labels": ["A", "B", "C"],
-    "datasets": [{"data": [10, 20, 30], "backgroundColor": "#E3120B"}]
+    "datasets": [{
+      "data": [10, 20, 30],
+      "backgroundColor": "#18181B",
+      "borderRadius": 4
+    }]
   }
 }
 ```
@@ -173,7 +168,11 @@ curl -X POST https://quickchart.io/chart \
   "type": "bar",
   "data": {
     "labels": ["A", "B", "C"],
-    "datasets": [{"data": [10, 20, 30], "backgroundColor": "#E3120B"}]
+    "datasets": [{
+      "data": [10, 20, 30],
+      "backgroundColor": "#18181B",
+      "borderRadius": 4
+    }]
   },
   "options": {
     "indexAxis": "y"
@@ -189,42 +188,84 @@ curl -X POST https://quickchart.io/chart \
     "labels": ["Jan", "Feb", "Mar"],
     "datasets": [{
       "data": [10, 20, 30],
-      "borderColor": "#E3120B",
-      "backgroundColor": "rgba(227, 18, 11, 0.1)",
-      "fill": true,
-      "tension": 0.1
+      "borderColor": "#18181B",
+      "borderWidth": 2,
+      "tension": 0.3,
+      "pointRadius": 0,
+      "fill": false
     }]
   }
 }
 ```
 
-### Pie Chart
-```json
-{
-  "type": "pie",
-  "data": {
-    "labels": ["A", "B", "C"],
-    "datasets": [{
-      "data": [45, 30, 25],
-      "backgroundColor": ["#E3120B", "#0D6ABF", "#006D64"]
-    }]
-  }
-}
-```
-
-### Multi-Series Line Chart
+### Area Chart (Filled Line)
 ```json
 {
   "type": "line",
   "data": {
     "labels": ["Jan", "Feb", "Mar"],
+    "datasets": [{
+      "data": [10, 20, 30],
+      "borderColor": "#18181B",
+      "backgroundColor": "rgba(24, 24, 27, 0.1)",
+      "borderWidth": 2,
+      "tension": 0.3,
+      "pointRadius": 0,
+      "fill": true
+    }]
+  }
+}
+```
+
+### Multi-Series Area Chart
+```json
+{
+  "type": "line",
+  "data": {
+    "labels": ["Jan", "Feb", "Mar", "Apr"],
     "datasets": [
-      {"label": "Series A", "data": [10, 20, 30], "borderColor": "#E3120B"},
-      {"label": "Series B", "data": [15, 25, 20], "borderColor": "#0D6ABF"}
+      {
+        "label": "Desktop",
+        "data": [100, 150, 120, 180],
+        "borderColor": "#18181B",
+        "backgroundColor": "rgba(24, 24, 27, 0.15)",
+        "borderWidth": 2,
+        "tension": 0.3,
+        "fill": true
+      },
+      {
+        "label": "Mobile",
+        "data": [80, 120, 140, 160],
+        "borderColor": "#71717A",
+        "backgroundColor": "rgba(113, 113, 122, 0.15)",
+        "borderWidth": 2,
+        "tension": 0.3,
+        "fill": true
+      }
     ]
   },
   "options": {
-    "plugins": { "legend": { "display": true, "position": "top" } }
+    "plugins": {
+      "legend": { "display": true, "position": "bottom", "labels": { "color": "#71717A", "usePointStyle": true } }
+    }
+  }
+}
+```
+
+### Pie / Doughnut Chart
+```json
+{
+  "type": "doughnut",
+  "data": {
+    "labels": ["A", "B", "C"],
+    "datasets": [{
+      "data": [45, 30, 25],
+      "backgroundColor": ["#18181B", "#71717A", "#D4D4D8"],
+      "borderWidth": 0
+    }]
+  },
+  "options": {
+    "cutout": "60%"
   }
 }
 ```
@@ -249,18 +290,17 @@ curl -X POST https://quickchart.io/chart \
       "type": "bar",
       "data": {
         "labels": ["Revenue", "Costs", "Profit"],
-        "datasets": [{"data": [450, 320, 130], "backgroundColor": ["#E3120B", "#0D6ABF", "#006D64"]}]
+        "datasets": [{"data": [450, 320, 130], "backgroundColor": "#18181B", "borderRadius": 4}]
       },
       "options": {
         "layout": {"padding": {"top": 20, "right": 30, "bottom": 20, "left": 20}},
         "plugins": {
-          "title": {"display": true, "text": "Q4 Financial Summary", "align": "start", "font": {"size": 18, "weight": "bold"}, "padding": {"bottom": 20}},
-          "legend": {"display": false},
-          "datalabels": {"display": true, "anchor": "end", "align": "top", "font": {"weight": "bold"}}
+          "title": {"display": true, "text": "Q4 Financial Summary", "align": "start", "font": {"size": 16, "weight": "600"}, "color": "#18181B", "padding": {"bottom": 20}},
+          "legend": {"display": false}
         },
         "scales": {
-          "y": {"beginAtZero": true, "grid": {"color": "#D9D5C9"}, "ticks": {"padding": 10}},
-          "x": {"grid": {"display": false}, "ticks": {"padding": 10}}
+          "y": {"beginAtZero": true, "border": {"display": false}, "grid": {"color": "#F4F4F5"}, "ticks": {"color": "#71717A", "padding": 10}},
+          "x": {"border": {"display": false}, "grid": {"display": false}, "ticks": {"color": "#71717A", "padding": 10}}
         }
       }
     }
@@ -268,15 +308,20 @@ curl -X POST https://quickchart.io/chart \
   --output ~/Downloads/chart_$(date +%Y%m%d_%H%M%S).png
 ```
 
-### Horizontal Bar Chart (Rankings)
+### Area Chart
 ```
-/chart horizontal bar: Chile 89, Mexico 76, Peru 65, Colombia 58 title "Market Share by Country"
+/chart area chart: Jan 186, Feb 305, Mar 237, Apr 73, May 209, Jun 214 title "Monthly Visitors"
+```
+
+### Multi-Series Comparison
+```
+/chart line chart with Desktop: Jan 100, Feb 150, Mar 120 and Mobile: Jan 80, Feb 120, Mar 140 title "Traffic by Device"
 ```
 
 ## Output
 
-Charts are saved to `~/Downloads/chart_YYYYMMDD_HHMMSS.png` by default (with automatic timestamp to avoid overwriting). Use the Read tool to display the generated image to the user.
+Charts are saved to `~/Downloads/chart_YYYYMMDD_HHMMSS.png` by default (with timestamp). Use the Read tool to display the generated image to the user.
 
 ## No Dependencies
 
-This skill uses QuickChart.io's free API - no local Python or npm packages required. Just curl.
+This skill uses QuickChart.io's free API - no local packages required. Just curl.

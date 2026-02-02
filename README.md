@@ -1,6 +1,8 @@
-# Chart Skill for Claude Code
+# Chart Skill
 
-Generate beautiful Economist-style charts using QuickChart.io. No dependencies required - just curl.
+Generate clean, minimal charts with shadcn-inspired grayscale styling. No dependencies required - just curl.
+
+Works with Claude Code, Cursor, Cline, and other AI agents that support the Agent Skills standard.
 
 ## Installation
 
@@ -10,9 +12,9 @@ npx skills add pvergaraf/chart-skill
 
 ## Features
 
-- Bar, line, pie, scatter, area, and horizontal bar charts
-- Economist-inspired color palette and styling
-- Data labels, clean gridlines, left-aligned titles
+- Bar, line, area, pie, doughnut, and horizontal bar charts
+- shadcn/Zinc grayscale color palette
+- Minimal design with subtle gridlines and rounded corners
 - Outputs to `~/Downloads/` with automatic timestamps
 - No dependencies - uses QuickChart.io API
 

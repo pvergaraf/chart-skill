@@ -13,11 +13,20 @@ Generate clean, minimal charts with shadcn-inspired grayscale styling using Quic
 
 ## Quick Usage
 
+Users can describe charts naturally:
+
 ```
-/chart bar chart: Category A 45, Category B 32, Category C 78
-/chart line chart: Jan 100, Feb 150, Mar 200, Apr 180
-/chart area chart: Q1 100, Q2 150, Q3 200, Q4 180
-/chart pie chart: Sales 45%, Marketing 30%, Engineering 25%
+/chart show me monthly revenue: Jan $12k, Feb $15k, Mar $18k, Apr $14k
+
+/chart compare Q4 performance - Revenue was 450, Costs 320, Profit 130
+
+/chart visualize team breakdown: Engineering 45%, Product 25%, Design 20%, Operations 10%
+
+/chart create an area chart of daily active users over the past week
+
+/chart horizontal bar ranking: Chile 89, Mexico 76, Peru 65, Colombia 58
+
+/chart plot this data as a line chart [paste CSV or JSON]
 ```
 
 ## Data Input Formats
@@ -272,9 +281,9 @@ curl -X POST https://quickchart.io/chart \
 
 ## Examples
 
-### Simple Bar Chart
+### Bar Chart
 ```
-/chart bar chart: Revenue 450, Costs 320, Profit 130 title "Q4 Financial Summary"
+/chart compare our Q4 numbers - Revenue hit 450, Costs were 320, and Profit came in at 130
 ```
 
 Generated curl:
@@ -310,12 +319,23 @@ curl -X POST https://quickchart.io/chart \
 
 ### Area Chart
 ```
-/chart area chart: Jan 186, Feb 305, Mar 237, Apr 73, May 209, Jun 214 title "Monthly Visitors"
+/chart show monthly visitors as an area chart - Jan had 186, Feb 305, Mar 237, Apr 73, May 209, Jun 214
 ```
 
 ### Multi-Series Comparison
 ```
-/chart line chart with Desktop: Jan 100, Feb 150, Mar 120 and Mobile: Jan 80, Feb 120, Mar 140 title "Traffic by Device"
+/chart compare desktop vs mobile traffic:
+Desktop: Jan 100, Feb 150, Mar 120
+Mobile: Jan 80, Feb 120, Mar 140
+```
+
+### From Data
+```
+/chart visualize this CSV as a line chart:
+date,users
+2024-01-01,150
+2024-01-02,180
+2024-01-03,220
 ```
 
 ## Output

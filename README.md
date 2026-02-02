@@ -1,26 +1,23 @@
-# Claude Skills
+# Chart Skill for Claude Code
 
-A collection of skills for Claude Code.
+Generate beautiful Economist-style charts using QuickChart.io. No dependencies required - just curl.
 
 ## Installation
 
 ```bash
-npx skills add pvergaraf/claude-skills
+npx skills add pvergaraf/chart-skill
 ```
 
-## Available Skills
+## Features
 
-### Chart (`/chart`)
-
-Generate beautiful Economist-style charts using QuickChart.io. No dependencies required - just curl.
-
-**Features:**
 - Bar, line, pie, scatter, area, and horizontal bar charts
 - Economist-inspired color palette and styling
 - Data labels, clean gridlines, left-aligned titles
 - Outputs to `~/Downloads/` with automatic timestamps
+- No dependencies - uses QuickChart.io API
 
-**Usage:**
+## Usage
+
 ```
 /chart bar chart: Revenue 450, Costs 320, Profit 130 title "Q4 Summary"
 /chart line chart: Jan 100, Feb 150, Mar 200, Apr 180

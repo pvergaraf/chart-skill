@@ -80,6 +80,16 @@ Label1 Value1, Label2 Value2, Label3 Value3
 - No borders, light aesthetic
 - Semi-transparent fills for area charts
 
+## CRITICAL: Y-Axis Labels
+
+**Every Y-axis MUST have visible numeric tick values.** Never omit them. This applies to:
+
+- **Single Y-axis**: Always include `ticks` with `color` and `padding` on the `y` scale. Never set `display: false` on ticks.
+- **Dual Y-axis**: Both `y` (left) AND `y1` (right) must have visible tick values. The right axis must also have `ticks` configured with `color` and `padding`, not just a title.
+- **Axis titles** (optional): If the data has units (e.g., "minutes", "hours", "$"), add a `title` to the axis with `display: true` and `text: "Unit"`.
+
+If a chart has two datasets with different units, use dual Y-axis with `yAxisID` on each dataset — and ensure BOTH axes render tick values.
+
 ## Instructions
 
 When the user requests a chart:
@@ -91,7 +101,7 @@ When the user requests a chart:
    - Output path (default: `~/Downloads/chart_$(date +%Y%m%d_%H%M%S).png`)
    - Size (default: 600x400)
 
-2. **Build the Chart.js configuration** using this shadcn-style template:
+2. **Build the Chart.js configuration** using this shadcn-style template. **Every Y-axis must have visible `ticks`** — never omit them:
 
 ```json
 {
@@ -254,6 +264,60 @@ curl -X POST https://quickchart.io/chart \
     ]
   },
   "options": {
+    "plugins": {
+      "legend": { "display": true, "position": "bottom", "labels": { "color": "#71717A", "usePointStyle": true } }
+    }
+  }
+}
+```
+
+### Dual Y-Axis Bar Chart
+```json
+{
+  "type": "bar",
+  "data": {
+    "labels": ["Jan", "Feb", "Mar"],
+    "datasets": [
+      {
+        "label": "Count",
+        "data": [38, 41, 43],
+        "backgroundColor": "#18181B",
+        "borderRadius": 4,
+        "yAxisID": "y"
+      },
+      {
+        "label": "Hours",
+        "data": [31, 36, 39],
+        "backgroundColor": "#A1A1AA",
+        "borderRadius": 4,
+        "yAxisID": "y1"
+      }
+    ]
+  },
+  "options": {
+    "scales": {
+      "y": {
+        "beginAtZero": true,
+        "position": "left",
+        "border": { "display": false },
+        "grid": { "color": "#F4F4F5" },
+        "ticks": { "color": "#71717A", "padding": 10, "font": { "size": 11 } },
+        "title": { "display": true, "text": "Count", "color": "#71717A", "font": { "size": 11 } }
+      },
+      "y1": {
+        "beginAtZero": true,
+        "position": "right",
+        "border": { "display": false },
+        "grid": { "display": false },
+        "ticks": { "color": "#71717A", "padding": 10, "font": { "size": 11 } },
+        "title": { "display": true, "text": "Hours", "color": "#71717A", "font": { "size": 11 } }
+      },
+      "x": {
+        "border": { "display": false },
+        "grid": { "display": false },
+        "ticks": { "color": "#71717A", "padding": 10, "font": { "size": 11 } }
+      }
+    },
     "plugins": {
       "legend": { "display": true, "position": "bottom", "labels": { "color": "#71717A", "usePointStyle": true } }
     }

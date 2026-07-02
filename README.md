@@ -1,6 +1,6 @@
 # Chart Skill
 
-Generate clean, minimal charts with shadcn-inspired grayscale styling. No dependencies required.
+Generate clean, minimal charts with a modern blue-accent palette and light/dark themes. No dependencies required.
 
 Works with Claude Code, Cursor, Cline, and other AI agents.
 
@@ -13,7 +13,9 @@ npx skills add pvergaraf/chart-skill
 ## Features
 
 - Bar, line, area, pie, doughnut, and horizontal bar charts
-- shadcn/Zinc grayscale color palette
+- Modern blue-accent color palette
+- Light and dark themes (`dark` keyword)
+- DM Sans typography across all chart text
 - Minimal design with subtle gridlines and rounded corners
 - Outputs to `~/Downloads/` with automatic timestamps
 
